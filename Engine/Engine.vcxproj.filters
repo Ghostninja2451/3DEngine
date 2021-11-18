@@ -85,6 +85,9 @@
     <ClCompile Include="Component\AudioComponent.cpp">
       <Filter>Sources\Component</Filter>
     </ClCompile>
+    <ClCompile Include="..\ThirdParty\glad\src\glad.c">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Random.h">
