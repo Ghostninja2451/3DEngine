@@ -52,13 +52,15 @@ void henry::Renderer::Create(const std::string& name, int width, int height)
 		exit(-1);
 	}
 
+	glEnable(GL_DEPTH_TEST);
+
 	//renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 }
 
 void henry::Renderer::BeginFrame()
 {
 	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void henry::Renderer::EndFrame()

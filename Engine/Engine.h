@@ -28,6 +28,8 @@
 //component
 #include"Component/PhysicsComponent.h"
 #include"Component/AudioComponent.h"
+#include"Component/CameraComponent.h"
+#include"Component/MeshComponent.h"
 
 //inputsystem
 #include"Input/InputSystem.h"
@@ -35,6 +37,11 @@
 //Graphic
 #include"Graphics/Renderer.h"
 #include"Graphics/Texture.h"
+#include"Graphics/Program.h"
+#include"Graphics/Shader.h"
+#include"Graphics/Material.h"
+#include"Graphics/VertexBuffer.h"
+#include"Graphics/VertexIndexBuffer.h"
 
 //Audio
 #include"Audio/AudioSystem.h"
