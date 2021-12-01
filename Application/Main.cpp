@@ -60,9 +60,9 @@ int main(int argc, char** argv)
 
 
 	//create shader
-	std::shared_ptr<henry::Program> program = engine.Get<henry::ResourceSystem>()->Get<henry::Program>("basic_shader");
-	std::shared_ptr<henry::Shader> vshader = engine.Get<henry::ResourceSystem>()->Get<henry::Shader>("shaders/basic.vert", (void*)GL_VERTEX_SHADER);
-	std::shared_ptr<henry::Shader> fshader = engine.Get<henry::ResourceSystem>()->Get<henry::Shader>("shaders/basic.frag", (void*)GL_FRAGMENT_SHADER);
+	std::shared_ptr<henry::Program> program = engine.Get<henry::ResourceSystem>()->Get<henry::Program>("light_shader");
+	std::shared_ptr<henry::Shader> vshader = engine.Get<henry::ResourceSystem>()->Get<henry::Shader>("shaders/Light.vert", (void*)GL_VERTEX_SHADER);
+	std::shared_ptr<henry::Shader> fshader = engine.Get<henry::ResourceSystem>()->Get<henry::Shader>("shaders/Light.frag", (void*)GL_FRAGMENT_SHADER);
 	
 	program->AddShader(vshader);
 	program->AddShader(fshader);
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(2);
 
 	//vertex buffer
-	std::shared_ptr<henry::VertexIndexBuffer> vertexBuffer = engine.Get<henry::ResourceSystem>()->Get<henry::VertexIndexBuffer>("cube_mesh");
+	std::shared_ptr<henry::VertexBuffer> vertexBuffer = engine.Get<henry::ResourceSystem>()->Get<henry::VertexBuffer>("cube_mesh");
 	vertexBuffer->CreateVertexBuffer(sizeof(vertices), 8, (void*)vertices);
 	vertexBuffer->CreateIndexBuffer(GL_UNSIGNED_INT, 36, (void*)indices);
 	vertexBuffer->SetAttribute(0, 3, 8 * sizeof(float), 0);
@@ -87,42 +87,61 @@ int main(int argc, char** argv)
 	auto texture = engine.Get<henry::ResourceSystem>()->Get<henry::Texture>("textures/llama.jpg");
 	texture->Bind();
 	
-	texture = engine.Get<henry::ResourceSystem>()->Get<henry::Texture>("textures/rocks.bmp");
-	texture->Bind();
-
 	texture = engine.Get<henry::ResourceSystem>()->Get<henry::Texture>("textures/wood.png");
 	texture->Bind();
 
-	// create camera
-	{
-		auto actor = henry::ObjectFactory::Instance().Create<henry::Actor>("Actor");
-		actor->name = "camera";
-		actor->transform.position = glm::vec3{ 0, 0, 10 };
+	texture = engine.Get<henry::ResourceSystem>()->Get<henry::Texture>("textures/rocks.bmp");
+	texture->Bind();
 
+	texture = engine.Get<henry::ResourceSystem>()->Get<henry::Texture>("textures/spot.png");
+	texture->Bind();
+
+	// create camera
+	auto actor = henry::ObjectFactory::Instance().Create<henry::Actor>("Actor");
+	actor->name = "camera";
+	actor->transform.position = glm::vec3{ 0, 0, 10 };
+
+	{
 		auto component = henry::ObjectFactory::Instance().Create<henry::CameraComponent>("CameraComponent");
 		component->SetPerspective(45.0f, 800.0f / 600.0f, 0.01f, 100.0f);
-
 		actor->AddComponent(std::move(component));
-		scene->AddActor(std::move(actor));
 	}
+	{
+		auto component = henry::ObjectFactory::Instance().Create<henry::FreeCameraController>("FreeCameraController");
+		component->speed = 3;
+		component->sensitivity = 0.01f;
+		actor->AddComponent(std::move(component));
+	}
+
+	scene->AddActor(std::move(actor));
 
 	// create cube
 	{
 		auto actor = henry::ObjectFactory::Instance().Create<henry::Actor>("Actor");
 		actor->name = "cube";
-		actor->transform.position = glm::vec3{ 0, 0, 0 };
+		actor->transform.position = glm::vec3{ 0, 0, 5 };
 
-		auto component = henry::ObjectFactory::Instance().Create<henry::MeshComponent>("MeshComponent");
-		component->program = engine.Get<henry::ResourceSystem>()->Get<henry::Program>("basic_shader");
-		component->vertexBuffer = engine.Get<henry::ResourceSystem>()->Get<henry::VertexIndexBuffer>("cube_mesh");
+		//auto component = henry::ObjectFactory::Instance().Create<henry::MeshComponent>("MeshComponent");
+		//component->program = engine.Get<henry::ResourceSystem>()->Get<henry::Program>("basic_shader");
+		//component->vertexBuffer = engine.Get<henry::ResourceSystem>()->Get<henry::VertexBuffer>("cube_mesh");
+
+		auto component = henry::ObjectFactory::Instance().Create<henry::ModelComponent>("ModelComponent");
+		component->program = engine.Get<henry::ResourceSystem>()->Get<henry::Program>("light_shader");
+		component->model = engine.Get<henry::ResourceSystem>()->Get<henry::Model>("models/spot.obj");
+
 
 		actor->AddComponent(std::move(component));
 		scene->AddActor(std::move(actor));
 	}
 
+	//lighting
+	auto shader = engine.Get<henry::ResourceSystem>()->Get<henry::Program>("light_shader");
+	shader->SetUniform("light.ambient", glm::vec3{ 0.4f });
+	shader->SetUniform("material.ambient", glm::vec3{ 1 });
 
 	glm::vec3 translate{ 0.0f };
 	float angle = 0;
+	
 	bool quit = false;
 	while (!quit)
 	{
@@ -146,18 +165,12 @@ int main(int argc, char** argv)
 		scene->Update(engine.time.deltaTime);
 
 		// update actor
-		glm::vec3 direction{ 0 };
-		if (engine.Get<henry::InputSystem>()->GetKeyState(SDL_SCANCODE_A) == henry::InputSystem::eKeyState::Held) direction.x = -1;
-		if (engine.Get<henry::InputSystem>()->GetKeyState(SDL_SCANCODE_D) == henry::InputSystem::eKeyState::Held) direction.x = 1;
-		if (engine.Get<henry::InputSystem>()->GetKeyState(SDL_SCANCODE_W) == henry::InputSystem::eKeyState::Held) direction.z = -1;
-		if (engine.Get<henry::InputSystem>()->GetKeyState(SDL_SCANCODE_S) == henry::InputSystem::eKeyState::Held) direction.z = 1;
-		if (engine.Get<henry::InputSystem>()->GetKeyState(SDL_SCANCODE_E) == henry::InputSystem::eKeyState::Held) direction.y = 1;
-		if (engine.Get<henry::InputSystem>()->GetKeyState(SDL_SCANCODE_Q) == henry::InputSystem::eKeyState::Held) direction.y = -1;
+		
 
 		auto actor = scene->FindActor("cube");
 		if (actor != nullptr)
 		{
-			actor->transform.position += direction * 5.0f * engine.time.deltaTime;
+			//actor->transform.position += direction * 5.0f * engine.time.deltaTime;
 			actor->transform.rotation.y += engine.time.deltaTime;
 		}
 

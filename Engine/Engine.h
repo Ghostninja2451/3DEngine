@@ -30,6 +30,9 @@
 #include"Component/AudioComponent.h"
 #include"Component/CameraComponent.h"
 #include"Component/MeshComponent.h"
+#include"Component/ModelComponent.h"
+
+#include"Component/FreeCameraControler.h"
 
 //inputsystem
 #include"Input/InputSystem.h"
@@ -41,7 +44,6 @@
 #include"Graphics/Shader.h"
 #include"Graphics/Material.h"
 #include"Graphics/VertexBuffer.h"
-#include"Graphics/VertexIndexBuffer.h"
 
 //Audio
 #include"Audio/AudioSystem.h"
