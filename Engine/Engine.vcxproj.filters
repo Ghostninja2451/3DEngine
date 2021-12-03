@@ -115,6 +115,9 @@
     <ClCompile Include="Component\ModelComponent.cpp">
       <Filter>Sources\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Component\LightComponent.cpp">
+      <Filter>Sources\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Random.h">
@@ -226,6 +229,9 @@
       <Filter>Sources\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Component\ModelComponent.h">
+      <Filter>Sources\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\LightComponent.h">
       <Filter>Sources\Component</Filter>
     </ClInclude>
   </ItemGroup>

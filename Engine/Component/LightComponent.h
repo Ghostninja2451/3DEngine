@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 
-namespace nc
+namespace henry
 {
 	class LightComponent : public Component
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
 #define REGISTER_CLASS(class) henry::ObjectFactory::Instance().Register<class>(#class);
+#define CREATE_ENGINE_OBJECT(class) henry::ObjectFactory::Instance().Create<henry::class>(#class);
 
 
 //core
@@ -31,6 +32,7 @@
 #include"Component/CameraComponent.h"
 #include"Component/MeshComponent.h"
 #include"Component/ModelComponent.h"
+#include"Component/LightComponent.h"
 
 #include"Component/FreeCameraControler.h"
 
