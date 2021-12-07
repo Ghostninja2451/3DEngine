@@ -12,13 +12,22 @@ int main(int argc, char** argv)
 	std::unique_ptr<henry::Engine> engine = std::make_unique<henry::Engine>();
 	engine->Startup();
 	engine->Get<henry::Renderer>()->Create("OpenGL", 800, 600);
+
+	henry::SeedRandom(static_cast<unsigned int>(time(nullptr)));
+	henry::SetFilePath("../resources");
+
 	// create scene
 	std::unique_ptr<henry::Scene> scene = std::make_unique<henry::Scene>();
 	scene->engine = engine.get();
-	henry::SeedRandom(static_cast<unsigned int>(time(nullptr)));
-	henry::SetFilePath("../resources");
+
+	rapidjson::Document document;
+	bool success = henry::json::Load("scenes/main.scn", document);
+	scene->Read(document);
+
+
+
 	// create camera
-	{
+	/*{
 		auto actor = CREATE_ENGINE_OBJECT(Actor);
 		actor->name = "camera";
 		actor->transform.position = glm::vec3{ 0, 0, 5 };
@@ -34,9 +43,9 @@ int main(int argc, char** argv)
 			actor->AddComponent(std::move(component));
 		}
 		scene->AddActor(std::move(actor));
-	}
+	}*/
 	// create model
-	{
+	/*{
 		auto actor = CREATE_ENGINE_OBJECT(Actor);
 		actor->name = "model";
 		actor->transform.position = glm::vec3{ 0 };
@@ -46,19 +55,20 @@ int main(int argc, char** argv)
 		component->material = engine->Get<henry::ResourceSystem>() -> Get<henry::Material>("materials/wood.mtl", engine.get());
 		actor->AddComponent(std::move(component));
 		scene->AddActor(std::move(actor));
-	}
+	}*/
 	// create light
-	{
+	/*{
 		auto actor = CREATE_ENGINE_OBJECT(Actor);
 		actor->name = "light";
-		actor->transform.position = glm::vec3{ 4 };
+		actor->transform.position = glm::vec3{ 4 , 1, 4 };
+
 		auto component = CREATE_ENGINE_OBJECT(LightComponent);
 		component->ambient = glm::vec3{ 0.2f };
 		component->diffuse = glm::vec3{ 1 };
 		component->specular = glm::vec3{ 1 };
 		actor->AddComponent(std::move(component));
 		scene->AddActor(std::move(actor));
-	}
+	}*/
 	glm::vec3 translate{ 0 };
 	float angle = 0;
 	bool quit = false;
@@ -81,10 +91,18 @@ int main(int argc, char** argv)
 		engine->Update();
 		scene->Update(engine->time.deltaTime);
 		// update actor
-		auto actor = scene->FindActor("model");
+		//auto actor = scene->FindActor("model");
+		//if (actor != nullptr)
+		//{
+		//	actor->transform.rotation.y += engine->time.deltaTime;
+		//}
+
+		// update actor
+		auto actor = scene->FindActor("light");
 		if (actor != nullptr)
 		{
-			actor->transform.rotation.y += engine->time.deltaTime;
+			glm::mat3 rotation = glm::rotate(engine->time.deltaTime, glm::vec3{ 0, 0, 1 });
+			actor->transform.position = actor->transform.position * rotation;
 		}
 		engine->Get<henry::Renderer>()->BeginFrame();
 		scene->Draw(nullptr);

@@ -1,6 +1,7 @@
 #include "ModelComponent.h"
 #include "CameraComponent.h"
 #include "Object/Actor.h"
+#include "Engine.h"
 
 namespace henry
 {
@@ -31,6 +32,15 @@ namespace henry
 
 	bool ModelComponent::Read(const rapidjson::Value& value)
 	{
+		std::string model_name;
+		JSON_READ(value, model_name);
+		model = owner->scene->engine->Get<henry::ResourceSystem>()->Get<henry::Model>(model_name);
+
+		std::string material_name;
+		JSON_READ(value, material_name);
+		material = owner->scene->engine->Get<henry::ResourceSystem>()->Get<henry::Material>(material_name, owner->scene->engine);
+
 		return true;
+
 	}
 }
