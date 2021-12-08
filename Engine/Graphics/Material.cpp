@@ -17,7 +17,6 @@ namespace henry
 		}
 
 		// color values
-		JSON_READ(document, ambient);
 		//<read the json diffuse, specular and shininess>
 		JSON_READ(document, diffuse);
 		JSON_READ(document, specular);
@@ -53,7 +52,6 @@ namespace henry
 		shader->Use();
 		// update shader material properties
 		//<set material diffuse, specular, and shininess uniforms>
-		shader->SetUniform("material.ambient", ambient);
 		shader->SetUniform("material.diffuse", diffuse);
 		shader->SetUniform("material.specular", specular);
 		shader->SetUniform("material.shininess", shininess);

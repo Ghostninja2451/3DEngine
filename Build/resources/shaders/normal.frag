@@ -2,14 +2,14 @@
 in VS_OUT
 {
 	vec3 position;
+	vec3 light_position;
 	vec2 texcoord;
-	mat3 tbn;
 } fs_in;
+
 
 out vec4 outColor;
 
 struct Material{
-	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
 	float shininess;
@@ -36,13 +36,11 @@ void main()
 	vec3 normal = texture(normal_sample, fs_in.texcoord).rgb;
 	// convert rgb (0 <-> 1) to xyx (-1 <-> 1)
 	normal = normalize(normal * 2.0 - 1.0);
-	// transform normals to model view space
-	normal = normalize(fs_in.tbn * normal);
 
 
 //diffuse
 
-	vec3 light_dir = normalize(vec3(light.position) - fs_in.position);
+	vec3 light_dir = normalize(vec3(fs_in.light_position) - fs_in.position);	
 	float intensity = max(dot(light_dir, normal), 0);	
 	vec3 diffuse = material.diffuse * light.diffuse * intensity;
 

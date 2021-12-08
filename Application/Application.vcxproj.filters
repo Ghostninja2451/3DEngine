@@ -83,5 +83,32 @@
     <None Include="..\Build\resources\materials\bricks.mtl">
       <Filter>Resource Files\Material</Filter>
     </None>
+    <None Include="..\Build\resources\shaders\normal.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Build\resources\shaders\normal.shdr">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Build\resources\shaders\normal.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Build\resources\materials\ogre.mtl">
+      <Filter>Resource Files\Material</Filter>
+    </None>
+    <None Include="..\Build\resources\materials\spot.mtl">
+      <Filter>Resource Files\Material</Filter>
+    </None>
+    <None Include="..\Build\resources\shaders\effects.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Build\resources\shaders\effects.shdr">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Build\resources\shaders\effects.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Build\resources\materials\Cruiser.mtl">
+      <Filter>Resource Files\Material</Filter>
+    </None>
   </ItemGroup>
 </Project>

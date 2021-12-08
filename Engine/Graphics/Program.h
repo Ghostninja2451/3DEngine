@@ -9,7 +9,6 @@ namespace henry
 {
 	class Program : public Resource
 	{
-
 	public:
 		Program();
 		~Program();
@@ -36,6 +35,7 @@ namespace henry
 
 	private:
 		GLint GetUniform(const std::string& name);
+		void DisplayInfo();
 
 	private:
 		GLuint program = 0;
